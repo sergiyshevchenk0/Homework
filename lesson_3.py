@@ -1,3 +1,4 @@
+# привет всем
 def in_namber():
     while True:
         try:
