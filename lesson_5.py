@@ -48,3 +48,13 @@ print(word_count)
 # Рішення знаходиться у файлі  lessen_5.3.py
 
 # 4. Дано рядок. Замініть у цьому рядку всі появи літери `h` на літеру `H`, крім першого та останнього входження.
+def replace_h(string):
+    if string.count('h') < 2:
+        return string
+    first_h_index = string.find('h')
+    last_h_index = string.rfind('h')
+    modified_string = string[:first_h_index + 1] + string[first_h_index + 1:last_h_index].replace('h', 'H') + string[last_h_index:]
+    return modified_string
+original_string = "hello world, hello world hello world hello world"
+modified_string = replace_h(original_string)
+print(modified_string)
