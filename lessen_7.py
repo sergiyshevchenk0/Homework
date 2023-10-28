@@ -26,18 +26,27 @@
 # Створити список my_result, який спочатку помістити
 # елементи на парних місцях my_list_1, а потім всі елементи на парних місцях my_list_2.
 
-my_list_1 = [1, 2, 3, 4, 5]
-my_list_2 = [6, 7, 8, 9, 10]
-my_result = []
-my_result.extend([i for i in my_list_1 if i % 2 == 0])
-my_result.extend([i for i in my_list_2 if i % 2 == 0])
-print(my_result)
+# my_list_1 = [1, 2, 3, 4, 5]
+# my_list_2 = [6, 7, 8, 9, 10]
+# my_result = []
+# my_result.extend([i for i in my_list_1 if i % 2 == 0])
+# my_result.extend([i for i in my_list_2 if i % 2 == 0])
+# print(my_result)
 
 # 4. Наведено список my_list. СТВОРИТИ НОВИЙ список new_list у якого перший елемент з my_list
 # стоїть на останньому місці. Якщо my_list [1,2,3,4], то new_list[2,3,4,1]
 
+# my_list = [7, 8, 9, 10]
+# new_list = my_list[1:] + [my_list[0]]
+# print(new_list)
+
 # 5. Даний список my_list. У цьому списку перший елемент переставити на останнє місце.
 # [1,2,3,4] -> [2,3,4,1]. Перестворювати список не можна! (використовуйте метод pop)
+
+my_list = [1, 2, 3, 4]
+element_1 = my_list.pop(0)
+my_list.append(element_1)
+print(my_list)
 
 # 6. Дано рядок у якому є числа (розділяються пробілами).
 # Наприклад "43 більше ніж 34, але менше ніж 56". Знайти суму ВСІХ ЧИСЕЛ (А НЕ ЦИФР) у цьому рядку.
