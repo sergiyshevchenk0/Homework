@@ -11,6 +11,12 @@
             # Варіант 2
 # print(len([i for i in str(input("Введіть ціле число з нулями: ")) if i == "0"]))
 
+            # Варіант 3
+# number = 102003000
+# string_number = str(number)
+# count = string_number.count("0")
+# print(count)
+
 # 2. Дано ціле число (int). Визначити скільки нулів наприкінці цього числа. Наприклад для числа 1002000 - три нулі
 
 # namber = int(input("Введіть ціле число з нулями: "))
@@ -43,26 +49,59 @@
 # 5. Даний список my_list. У цьому списку перший елемент переставити на останнє місце.
 # [1,2,3,4] -> [2,3,4,1]. Перестворювати список не можна! (використовуйте метод pop)
 
-my_list = [1, 2, 3, 4]
-element_1 = my_list.pop(0)
-my_list.append(element_1)
-print(my_list)
+# my_list = [1, 2, 3, 4]
+# element_1 = my_list.pop(0)
+# my_list.append(element_1)
+# print(my_list)
 
 # 6. Дано рядок у якому є числа (розділяються пробілами).
 # Наприклад "43 більше ніж 34, але менше ніж 56". Знайти суму ВСІХ ЧИСЕЛ (А НЕ ЦИФР) у цьому рядку.
 # Для цього прикладу відповідь - 133. (використовуйте split та перевірку isdigit)
 
+# value_str =" 56 > 43 > 34"
+# def sum_all_nambers(value_str):
+#   numbers = value_str.split()
+#   sum = 0
+#   for number in numbers:
+#     if number.isdigit():
+#       sum += int(number)
+#   return sum
+# print(sum_all_nambers(value_str))
+
 # 7. Наведено список чисел. Визначте, скільки в цьому списку елементів,
 # які більше суми двох своїх сусідів (ліворуч і праворуч), і НАДРУКАЙТЕ КІЛЬКІСТЬ таких елементів.
 # Останні елементи списку ніколи не враховуються, оскільки у них недостатньо сусідів.
 # Для списку [2,4,1,5,3,9,0,7] відповіддю буде 3, тому що 4> 2+1, 5> 1+3, 9>3+0.
+# def sum_element(nambers):
+#   Count = 0
+#   index = 1
+#   while index < len(nambers) - 1:
+#     if numbers[index] > numbers[index - 1] + numbers[index + 1]:
+#       Count += 1
+#     index += 1
+#   return Count
+# numbers = [2, 4, 1, 5, 3, 9, 0, 7]
+# print(sum_element(numbers))
 
 # 8. Даний список my_list, в якому можуть бути як рядки (type str), так і цілі числа (type int).
 # Наприклад [1, 2, 3, "11", "22", 33]
 # Створити новий список у який помістити лише рядки з my_list.
 
+# def only_strings(my_list):
+#   new_list = []
+#   for i in my_list:
+#     if type(i) == str:
+#       new_list.append(i)
+#   return new_list
+# my_list = [1, 2, 3, "11", "22", 33]
+# print(only_strings(my_list))
+
 # 9. Дано рядок my_str. Створити список в який помістити символи з my_str,
 # які зустрічаються в рядку ТІЛЬКИ ОДИН разів.
+
+my_str = ["1", "2", "3", "4", "5", "1", "2"]
+new_list =set(my_str)
+print(list(new_list))
 
 # 10. Дано два рядки. Створити список, у якому помістити ті символи,
 # які є в обох рядках хоча б один раз.
