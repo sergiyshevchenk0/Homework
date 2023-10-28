@@ -26,6 +26,13 @@
 # Створити список my_result, який спочатку помістити
 # елементи на парних місцях my_list_1, а потім всі елементи на парних місцях my_list_2.
 
+my_list_1 = [1, 2, 3, 4, 5]
+my_list_2 = [6, 7, 8, 9, 10]
+my_result = []
+my_result.extend([i for i in my_list_1 if i % 2 == 0])
+my_result.extend([i for i in my_list_2 if i % 2 == 0])
+print(my_result)
+
 # 4. Наведено список my_list. СТВОРИТИ НОВИЙ список new_list у якого перший елемент з my_list
 # стоїть на останньому місці. Якщо my_list [1,2,3,4], то new_list[2,3,4,1]
 
