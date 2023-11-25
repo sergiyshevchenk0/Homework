@@ -2,54 +2,53 @@
 #
 # 1. Ініціалізація класу з одним параметром – ім'я файлу.
 
-class DomainExtractor:
-    def __init__(self, filename):
-        self.filename = filename
-
-    def get_domains(self):
-        with open(self.filename, "r") as f:
-            domains = f.readlines()
-        return [domain.strip().replace(".", "") for domain in domains]
-
-
-if __name__ == "__main__":
-    domains_extractor = DomainExtractor("domains.txt")
-    domains = domains_extractor.get_domains()
-    print(domains)
-
 # 2. Написати метод екземпляра класу, який створює атрибут екземпляра класу
 # у вигляді списку рядків (назви повертати без крапки)
 #
 
-# filename = 'Homework/names.txt'
-# def get_all_surnames(filename):
-#     with open(filename, "r") as f:
-#         surnames = []
-#         for line in f:
-#             surname = line.split("\t")[1]
-#             surnames.append(surname)
-#     return surnames
+# class SurnameParser:
+#
+#     def __init__(self, filename):
+#         self.filename = filename
+#
+#     def get_surnames(self):
+#         with open(self.filename, "r") as f:
+#             surnames = []
+#             for line in f:
+#                 surname = line.split("\t")[1]
+#                 surname = surname.strip().replace(".", "")
+#                 surnames.append(surname)
+#         self.surnames = surnames
+#         return surnames
 #
 #
-# surnames = get_all_surnames("names.txt")
+# surname_parser = SurnameParser("names.txt")
+# surnames = surname_parser.get_surnames()
 # print(surnames)
 
 # 2. Написати метод екземпляра класу, який повертає список усіх прізвищ із файлу.
 # Кожен рядок файлу містить номер, прізвище, країну, кілька (таблиця взята з вікіпедії).
 # Розділювач - символ табуляції "t"
 
-# filename = 'Homework/names.txt'
-# def get_all_surnames(filename):
-#     with open(filename, "r") as f:
-#         surnames = []
-#         for line in f:
-#             surname = line.split("\t")[1]
-#             surnames.append(surname)
-#     return surnames
+# class SurnameParser:
+#
+#     def __init__(self, filename):
+#         self.filename = filename
+#
+#     def get_surnames(self):
+#         with open(self.filename, "r") as f:
+#             surnames = []
+#             for line in f:
+#                 surname = line.split("\t")[1]
+#                 surname = surname.strip().replace(".", "")
+#                 surnames.append(surname)
+#         return surnames
 #
 #
-# surnames = get_all_surnames("names.txt")
+# surname_parser = SurnameParser("names.txt")
+# surnames = surname_parser.get_surnames()
 # print(surnames)
+
 
 #
 # 3. Написати метод екземпляра класу, який повертає список
@@ -57,25 +56,30 @@ if __name__ == "__main__":
 # Наприклад [{"date": "1st January 1919"}, {"date": "8th February 1828"}, ...]
 #
 
-# filename = 'Homework/authors.txt'
+# class DateParser:
 #
-# def get_dates(filename, event_type):
-#     with open(filename, "r") as f:
+#     def __init__(self, filename, event_type):
+#         self.filename = filename
+#         self.event_type = event_type
+#
+#     def get_dates(self):
 #         dates = []
-#         for line in f:
-#             if line.startswith("#"):
-#                 continue
-#             if event_type in line:
-#                 date = line.split("-")[0]
-#                 dates.append({"date": date})
-#     return dates
+#         with open(self.filename, "r") as f:
+#             for line in f:
+#                 if line.startswith("#"):
+#                     continue
+#                 if self.event_type in line:
+#                     date = line.split("-")[0]
+#                     dates.append({"date": date})
+#         return dates
 #
 #
 # filename = "authors.txt"
 # event_type = "birthday"
-# dates = get_dates(filename, event_type)
-#
+# date_parser = DateParser(filename, event_type)
+# dates = date_parser.get_dates()
 # print(dates)
+
 
 # 4* (*здавати не обов'язково).
 # Написати метод екземпляра класу, отримує у вигляді параметра ім'я файлу (authors.txt) та повертає список
