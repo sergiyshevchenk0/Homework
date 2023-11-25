@@ -12,9 +12,9 @@ SELL - продати долари
 RESTART - скинути гру
 HELP - отримати допомогу
 Приклади:
-Отримати курс: python trader.py RATE
-Купити 100 доларів: python trader.py BUY 100
-Допомога: python trader.py HELP
+Отримати курс: RATE
+Купити 100 доларів: BUY 100
+Допомога: HELP
 Бажаємо успіхів!
 """)
 
