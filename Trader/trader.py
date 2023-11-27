@@ -1,23 +1,3 @@
-print("""
-Вітаємо в грі "Трейдер"!
-Гра дозволяє вам відчути себе валютним трейдером, купуючи та продаючи долари за гривні.
-Опис гри:
-Гра починається з початкового балансу в гривнях і доларах. Ваша мета - отримати прибуток від операцій на змінному обмінному курсі.
-Команди:
-NEXT - отримати наступний курс
-RATE - поточний курс
-AVAILABLE - баланс в гривнях та доларах
-BUY - купити долари
-SELL - продати долари
-RESTART - скинути гру
-HELP - отримати допомогу
-Приклади:
-Отримати курс: RATE
-Купити 100 доларів: BUY 100
-Допомога: HELP
-Бажаємо успіхів!
-""")
-
 import json
 import random
 import argparse
@@ -49,7 +29,7 @@ class Trader:
 
     def save_state(self):
         with open(self.state_file, 'w') as state_file:
-            json.dump(self.state, state_file)
+            json.dump(self.state, state_file, indent=2)
 
     def get_rate(self):
         return round(random.uniform(self.initial_rate - self.delta, self.initial_rate + self.delta), 2)
@@ -59,29 +39,29 @@ class Trader:
         return state["balance_usd"], state["balance_uah"]
 
     def buy_usd(self, amount):
-        state = self.read_state()
-        rate = state["rate"]
+        rate = self.state["rate"]
         required_amount_uah = round(amount * rate, 2)
 
-        if state["balance_uah"] >= required_amount_uah:
-            state["balance_uah"] -= required_amount_uah
-            state["balance_usd"] += amount
+        if self.state["balance_uah"] >= required_amount_uah:
+            self.state["balance_uah"] -= required_amount_uah
+            self.state["balance_usd"] += amount
             self.save_state()
             return True
         else:
+            print(
+                f"UNAVAILABLE, REQUIRED BALANCE UAH {required_amount_uah:.2f}, AVAILABLE {self.state['balance_uah']:.2f}")
             return False
 
     def sell_usd(self, amount):
-        state = self.read_state()
-
-        if state["balance_usd"] >= amount:
-            rate = state["rate"]
+        if self.state["balance_usd"] >= amount:
+            rate = self.state["rate"]
             gained_amount_uah = round(amount * rate, 2)
-            state["balance_uah"] += gained_amount_uah
-            state["balance_usd"] -= amount
+            self.state["balance_uah"] += gained_amount_uah
+            self.state["balance_usd"] -= amount
             self.save_state()
             return True
         else:
+            print(f"UNAVAILABLE, REQUIRED BALANCE USD {amount:.2f}, AVAILABLE {self.state['balance_usd']:.2f}")
             return False
 
     def buy_all(self):
@@ -119,16 +99,15 @@ def process_command(trader, command):
     elif command == "RATE":
         print(trader.get_rate())
     elif command == "AVAILABLE":
-        usd, uah = trader.get_available_balance()
-        print(f"USD {usd} UAH {uah}")
+        available_usd, available_uah = trader.get_available_balance()
+        print(f"USD {available_usd} UAH {available_uah}")
     elif command.startswith("BUY") and len(command.split()) == 2:
         try:
             amount = float(command.split()[1])
             success = trader.buy_usd(amount)
             if success:
-                print(f"Куплено {amount} USD")
-            else:
-                print("Недостатньо гривень для покупки.")
+                available_usd, available_uah = trader.get_available_balance()
+                print(f"Куплено {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
             print("Некоректна команда. Введіть 'BUY XXX', де XXX - кількість доларів для покупки.")
     elif command.startswith("SELL") and len(command.split()) == 2:
@@ -136,17 +115,18 @@ def process_command(trader, command):
             amount = float(command.split()[1])
             success = trader.sell_usd(amount)
             if success:
-                print(f"Продано {amount} USD")
-            else:
-                print("Недостатньо доларів для продажу.")
+                available_usd, available_uah = trader.get_available_balance()
+                print(f"Продано {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
             print("Некоректна команда. Введіть 'SELL XXX', де XXX - кількість доларів для продажу.")
     elif command == "BUY ALL":
         trader.buy_all()
-        print("Куплено максимальну кількість USD за доступні гривні.")
+        available_usd, available_uah = trader.get_available_balance()
+        print(f"Куплено максимальну кількість USD за доступні гривні. Доступно: USD {available_usd} UAH {available_uah}")
     elif command == "SELL ALL":
         trader.sell_all()
-        print("Продано всі долари.")
+        available_usd, available_uah = trader.get_available_balance()
+        print(f"Продано всі долари. Доступно: USD {available_usd} UAH {available_uah}")
     elif command == "RESTART":
         trader.state = {
             "rate": trader.initial_rate,
@@ -156,24 +136,30 @@ def process_command(trader, command):
         trader.save_state()
         print("Гра розпочата з початку.")
     elif command == "HELP":
-        print("Доступні команди:")
-        print("NEXT - отримати наступний курс")
-        print("RATE - отримати поточний курс (USD/UAH)")
-        print("AVAILABLE - отримати залишок на рахунках")
-        print("BUY XXX - купівля XXX доларів")
-        print("SELL XXX - продаж XXX доларів")
-        print("BUY ALL - купівля доларів на всі гривні")
-        print("SELL ALL - продаж всіх доларів")
-        print("RESTART - розпочати гру з початку")
+        print("""
+        Доступні команди:
+        NEXT - отримати наступний курс
+        RATE - отримати поточний курс (USD/UAH)
+        AVAILABLE - отримати залишок на рахунках
+        BUY XXX - купівля XXX доларів
+        SELL XXX - продаж XXX доларів
+        BUY ALL - купівля доларів на всі гривні
+        SELL ALL - продаж всіх доларів
+        RESTART - розпочати гру з початку
+        EXIT - вихід з гри
+        """)
     else:
         print(f"Невідома команда: {command}. Для отримання довідки введіть 'HELP'")
-
 
 if __name__ == '__main__':
     trader = Trader()
 
-    if len(sys.argv) > 1:
-        command = sys.argv[1].upper()
+    parser = argparse.ArgumentParser(description="Currency Trader Game")
+    parser.add_argument("command", nargs="?", help="Command to execute")
+    args = parser.parse_args()
+
+    if args.command:
+        command = args.command.upper()
         process_command(trader, command)
     else:
         while True:
