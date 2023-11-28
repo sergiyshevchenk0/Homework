@@ -90,44 +90,44 @@ class Trader:
         self.save_state()
 
 
-def process_command(trader, command):
-    if command == "EXIT":
+def process_command(trader, action, amount=None):
+    if action == "EXIT":
         sys.exit()
 
-    if command == "NEXT":
+    if action == "NEXT":
         trader.next_rate()
-    elif command == "RATE":
+    elif action == "RATE":
         print(trader.get_rate())
-    elif command == "AVAILABLE":
+    elif action == "AVAILABLE":
         available_usd, available_uah = trader.get_available_balance()
         print(f"USD {available_usd} UAH {available_uah}")
-    elif command.startswith("BUY") and len(command.split()) == 2:
+    elif action == "BUY" and amount is not None:
         try:
-            amount = float(command.split()[1])
+            amount = float(amount)
             success = trader.buy_usd(amount)
             if success:
                 available_usd, available_uah = trader.get_available_balance()
                 print(f"Куплено {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
             print("Некоректна команда. Введіть 'BUY XXX', де XXX - кількість доларів для покупки.")
-    elif command.startswith("SELL") and len(command.split()) == 2:
+    elif action == "SELL" and amount is not None:
         try:
-            amount = float(command.split()[1])
+            amount = float(amount)
             success = trader.sell_usd(amount)
             if success:
                 available_usd, available_uah = trader.get_available_balance()
                 print(f"Продано {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
             print("Некоректна команда. Введіть 'SELL XXX', де XXX - кількість доларів для продажу.")
-    elif command == "BUY ALL":
+    elif action == "BUY ALL":
         trader.buy_all()
         available_usd, available_uah = trader.get_available_balance()
         print(f"Куплено максимальну кількість USD за доступні гривні. Доступно: USD {available_usd} UAH {available_uah}")
-    elif command == "SELL ALL":
+    elif action == "SELL ALL":
         trader.sell_all()
         available_usd, available_uah = trader.get_available_balance()
         print(f"Продано всі долари. Доступно: USD {available_usd} UAH {available_uah}")
-    elif command == "RESTART":
+    elif action == "RESTART":
         trader.state = {
             "rate": trader.initial_rate,
             "balance_uah": trader.initial_balance_uah,
@@ -135,7 +135,7 @@ def process_command(trader, command):
         }
         trader.save_state()
         print("Гра розпочата з початку.")
-    elif command == "HELP":
+    elif action == "HELP":
         print("""
         Доступні команди:
         NEXT - отримати наступний курс
@@ -149,19 +149,22 @@ def process_command(trader, command):
         EXIT - вихід з гри
         """)
     else:
-        print(f"Невідома команда: {command}. Для отримання довідки введіть 'HELP'")
+        print(f"Невідома команда: {action}. Для отримання довідки введіть 'HELP'")
 
 if __name__ == '__main__':
     trader = Trader()
 
     parser = argparse.ArgumentParser(description="Currency Trader Game")
-    parser.add_argument("command", nargs="?", help="Command to execute")
+    parser.add_argument("action", nargs="?", help="Action to execute (RATE, BUY, SELL, etc.)")
+    parser.add_argument("amount", nargs="?", type=float, help="Amount for BUY or SELL actions")
     args = parser.parse_args()
 
-    if args.command:
-        command = args.command.upper()
-        process_command(trader, command)
+    if args.action:
+        action = args.action.upper()
+        process_command(trader, action, args.amount)
     else:
         while True:
-            command = input("Введіть команду (або введіть 'EXIT' для виходу): ").strip().upper()
-            process_command(trader, command)
+            action = input("Введіть команду (або введіть 'EXIT' для виходу): ").strip().upper()
+            if action == "EXIT":
+                sys.exit()
+            process_command(trader, action)
