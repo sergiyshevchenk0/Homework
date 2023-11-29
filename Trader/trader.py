@@ -72,6 +72,7 @@ class Trader:
 
         state["balance_uah"] = 0
         state["balance_usd"] += max_usd
+        self.state = state
         self.save_state()
 
     def sell_all(self):
@@ -82,6 +83,7 @@ class Trader:
 
         state["balance_uah"] += gained_uah
         state["balance_usd"] = 0
+        self.state = state
         self.save_state()
 
     def next_rate(self):
@@ -109,7 +111,13 @@ def process_command(trader, action, amount=None):
                 available_usd, available_uah = trader.get_available_balance()
                 print(f"Куплено {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
-            print("Некоректна команда. Введіть 'BUY XXX', де XXX - кількість доларів для покупки.")
+            if amount.upper() == "ALL":
+                trader.buy_all()
+                available_usd, available_uah = trader.get_available_balance()
+                print(f"Куплено максимальну кількість USD за доступні гривні. Доступно: USD {available_usd} UAH {available_uah}")
+            else:
+                print("Некоректна команда. Введіть 'BUY XXX' або 'BUY ALL', де XXX - кількість доларів для покупки.")
+
     elif action == "SELL" and amount is not None:
         try:
             amount = float(amount)
@@ -118,15 +126,12 @@ def process_command(trader, action, amount=None):
                 available_usd, available_uah = trader.get_available_balance()
                 print(f"Продано {amount} USD. Доступно: USD {available_usd} UAH {available_uah}")
         except ValueError:
-            print("Некоректна команда. Введіть 'SELL XXX', де XXX - кількість доларів для продажу.")
-    elif action == "BUY ALL":
-        trader.buy_all()
-        available_usd, available_uah = trader.get_available_balance()
-        print(f"Куплено максимальну кількість USD за доступні гривні. Доступно: USD {available_usd} UAH {available_uah}")
-    elif action == "SELL ALL":
-        trader.sell_all()
-        available_usd, available_uah = trader.get_available_balance()
-        print(f"Продано всі долари. Доступно: USD {available_usd} UAH {available_uah}")
+            if amount.upper() == "ALL":
+                trader.sell_all()
+                available_usd, available_uah = trader.get_available_balance()
+                print(f"Продано всі долари. Доступно: USD {available_usd} UAH {available_uah}")
+            else:
+                print("Некоректна команда. Введіть 'SELL XXX' або 'SELL ALL', де XXX - кількість доларів для продажу.")
     elif action == "RESTART":
         trader.state = {
             "rate": trader.initial_rate,
@@ -156,7 +161,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(description="Currency Trader Game")
     parser.add_argument("action", nargs="?", help="Action to execute (RATE, BUY, SELL, etc.)")
-    parser.add_argument("amount", nargs="?", type=float, help="Amount for BUY or SELL actions")
+    parser.add_argument("amount", nargs="?", help="Amount for BUY or SELL actions")
     args = parser.parse_args()
 
     if args.action:
